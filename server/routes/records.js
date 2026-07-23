@@ -161,7 +161,7 @@ router.delete('/:id', async (req, res) => {
       'DELETE FROM tree_records WHERE id = ?',
       [req.params.id]
     );
-    if (result.affectedRows === 0) {
+    if (Number(result.affectedRows) === 0) {
       return res.status(404).json({ error: 'Record not found' });
     }
     res.json({ message: 'Deleted', id: req.params.id });

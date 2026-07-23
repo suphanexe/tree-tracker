@@ -7,7 +7,7 @@
 const CONFIG = {
     // Database mode: 'local' (default) | 'api' (MariaDB backend)
     // Set apiUrl to your backend server address to enable MariaDB mode
-    apiUrl: null,                // e.g. 'http://192.168.2.45:3000' or null for localStorage
+    apiUrl: 'http://192.168.2.45:3000', // MariaDB backend - set null for localStorage
     useFirebase: false,          // Set to true to use Firebase instead
     qrPrefix: 'TREE-',          // Expected QR code prefix
     photoMaxSizeMB: 2,          // Max photo size in MB
