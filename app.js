@@ -51,7 +51,6 @@ function loadQrScannerLibrary() {
         }
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
-        script.async = true;
         script.onload = () => resolve();
         script.onerror = () => reject(new Error('ไม่สามารถโหลดไลบรารีสแกน QR Code ได้'));
         document.head.appendChild(script);
