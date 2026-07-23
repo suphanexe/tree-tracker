@@ -42,9 +42,28 @@ function showToast(message, type = 'info') {
     setTimeout(() => toast.remove(), 3500);
 }
 
+// ===== Lazy load html5-qrcode library =====
+function loadQrScannerLibrary() {
+    return new Promise((resolve, reject) => {
+        if (typeof Html5Qrcode !== 'undefined') {
+            resolve();
+            return;
+        }
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error('ไม่สามารถโหลดไลบรารีสแกน QR Code ได้'));
+        document.head.appendChild(script);
+    });
+}
+
 // ===== Scanner Functions =====
 async function startScanner() {
     try {
+        // Dynamically load QR scanner library
+        await loadQrScannerLibrary();
+        
         html5QrCode = new Html5Qrcode("reader");
         
         const config = {

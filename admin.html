@@ -15,7 +15,10 @@
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
     <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
 </head>
 <body>
     <!-- Skip to content link for keyboard users -->
@@ -99,9 +102,9 @@
 
     <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
-    <script src="db.js"></script>
-    <script src="firebase-config.js"></script>
-    <script src="admin.js"></script>
+    <script src="db.js" defer></script>
+    <script src="firebase-config.js" defer></script>
+    <script src="admin.js" defer></script>
 
     <!-- PWA: Register Service Worker -->
     <script>
