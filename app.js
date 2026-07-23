@@ -5,10 +5,13 @@
 
 // ===== Configuration =====
 const CONFIG = {
-    useFirebase: false,        // Set to true to use Firebase instead of localStorage
-    qrPrefix: 'TREE-',         // Expected QR code prefix
-    photoMaxSizeMB: 2,         // Max photo size in MB
-    debug: false               // Enable debug logging
+    // Database mode: 'local' (default) | 'api' (MariaDB backend)
+    // Set apiUrl to your backend server address to enable MariaDB mode
+    apiUrl: null,                // e.g. 'http://192.168.2.45:3000' or null for localStorage
+    useFirebase: false,          // Set to true to use Firebase instead
+    qrPrefix: 'TREE-',          // Expected QR code prefix
+    photoMaxSizeMB: 2,          // Max photo size in MB
+    debug: false                // Enable debug logging
 };
 
 // ===== State =====
@@ -286,4 +289,15 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ===== Init =====
+
+// Configure database backend
+if (CONFIG.apiUrl) {
+    db.setApiBackend(CONFIG.apiUrl);
+    console.log(`[Main] Using MariaDB API: ${CONFIG.apiUrl}`);
+} else if (CONFIG.useFirebase) {
+    db.setFirebase();
+} else {
+    console.log('[Main] Using localStorage (default)');
+}
+
 if (CONFIG.debug) console.log('Smart Tree Tracker initialized');

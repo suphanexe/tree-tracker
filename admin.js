@@ -315,4 +315,11 @@ function debounce(fn, delay) {
 }
 
 // ===== Init =====
+
+// Configure database backend (must match CONFIG in app.js)
+// If using MariaDB, the host page must set db.setApiBackend() before this runs
+if (typeof CONFIG !== 'undefined' && CONFIG.apiUrl) {
+    db.setApiBackend(CONFIG.apiUrl);
+}
+
 document.addEventListener('DOMContentLoaded', loadRecords);

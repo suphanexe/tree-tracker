@@ -1,0 +1,17 @@
+{
+  "name": "smart-tree-tracker-server",
+  "version": "1.0.0",
+  "description": "Backend API for Smart Tree Tracker - MariaDB + Express",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "setup-db": "node setup-db.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "mariadb": "^3.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0"
+  }
+}
