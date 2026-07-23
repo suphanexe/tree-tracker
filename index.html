@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Smart Tree Tracker - สแกน QR Code</title>
     <meta name="description" content="ระบบติดตามดูแลต้นไม้อัจฉริยะ - สแกน QR Code เพื่อรายงานสถานะ">
     <meta name="theme-color" content="#2D8A4E">
@@ -19,8 +19,12 @@
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
 <body>
+    <!-- Skip to content link for keyboard users -->
+    <a href="#main-content" class="skip-link">ข้ามไปยังเนื้อหาหลัก</a>
+
     <div class="container">
-        <div class="glass-card">
+        <main id="main-content">
+        <div class="glass-card" role="region" aria-label="ฟอร์มรายงานสถานะต้นไม้">
             <header>
                 <h1><span class="icon">🌳</span> Smart Tree Tracker</h1>
                 <p>สแกน QR Code เพื่อรายงานสถานะต้นไม้</p>
@@ -128,12 +132,12 @@
 
         <!-- Bottom Actions -->
         <div class="text-center mt-4" style="display:flex; flex-direction:column; gap:8px; align-items:center;">
-            <a href="admin.html" class="btn btn-outline btn-sm">📊 ไปหน้า Admin Dashboard</a>
-            <button id="install-btn" class="btn btn-primary btn-sm" style="display:none;">📲 ติดตั้งแอป</button>
+            <a href="admin.html" class="btn btn-outline btn-sm" aria-label="ไปหน้า Admin Dashboard">📊 ไปหน้า Admin Dashboard</a>
+            <button id="install-btn" class="btn btn-primary btn-sm" style="display:none;" aria-label="ติดตั้งแอป">📲 ติดตั้งแอป</button>
         </div>
-    </div>
-
-    <!-- Toast container -->    <div id="toast-container" class="toast-container"></div>
+        </main>
+    </div>            <!-- Toast container -->
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <script src="db.js"></script>
     <script src="firebase-config.js"></script>

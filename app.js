@@ -35,8 +35,9 @@ function showToast(message, type = 'info') {
     const container = $('toast-container');
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
+    toast.setAttribute('role', 'alert');
     const icons = { success: '✅', error: '❌', info: 'ℹ️' };
-    toast.innerHTML = `${icons[type] || 'ℹ️'} ${message}`;
+    toast.textContent = `${icons[type] || 'ℹ️'} ${message}`;
     container.appendChild(toast);
     setTimeout(() => toast.remove(), 3500);
 }
@@ -124,30 +125,42 @@ function showForm() {
     scannerSection.style.display = 'none';
     formSection.style.display = 'block';
     successMessage.style.display = 'none';
+    formSection.setAttribute('aria-hidden', 'false');
+    scannerSection.setAttribute('aria-hidden', 'true');
     treeIdDisplay.textContent = currentTreeId;
     // Reset form
     treeForm.reset();
     // Clear file input (extra safety)
     $('photo').value = '';
+    // Focus on first field
+    setTimeout(() => $('caretaker').focus(), 100);
 }
 
 function cancelForm() {
     formSection.style.display = 'none';
     scannerSection.style.display = 'block';
     successMessage.style.display = 'none';
+    formSection.setAttribute('aria-hidden', 'true');
+    scannerSection.setAttribute('aria-hidden', 'false');
     startScanBtn.style.display = 'inline-flex';
     stopScanBtn.style.display = 'none';
     currentTreeId = null;
     treeForm.reset();
+    // Focus back on start scan button
+    setTimeout(() => startScanBtn.focus(), 100);
 }
 
 function resetToScanner() {
     successMessage.style.display = 'none';
     scannerSection.style.display = 'block';
     formSection.style.display = 'none';
+    scannerSection.setAttribute('aria-hidden', 'false');
+    formSection.setAttribute('aria-hidden', 'true');
     startScanBtn.style.display = 'inline-flex';
     stopScanBtn.style.display = 'none';
     currentTreeId = null;
+    // Focus back on start scan button
+    setTimeout(() => startScanBtn.focus(), 100);
 }
 
 // ===== Photo Upload =====

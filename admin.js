@@ -22,8 +22,9 @@ function showToast(message, type = 'info') {
     const container = $('toast-container');
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
+    toast.setAttribute('role', 'alert');
     const icons = { success: '✅', error: '❌', info: 'ℹ️' };
-    toast.innerHTML = `${icons[type] || 'ℹ️'} ${message}`;
+    toast.textContent = `${icons[type] || 'ℹ️'} ${message}`;
     container.appendChild(toast);
     setTimeout(() => toast.remove(), 3500);
 }
@@ -84,7 +85,7 @@ async function loadRecords() {
         }
     } catch (error) {
         console.error('Load error:', error);
-        loadingEl.innerHTML = '<p style="color: var(--danger);">❌ เกิดข้อผิดพลาดในการโหลดข้อมูล</p>';
+        loadingEl.innerHTML = '<p style="color: var(--danger);" role="alert">❌ เกิดข้อผิดพลาดในการโหลดข้อมูล</p>';
     }
 }
 
@@ -187,17 +188,17 @@ function renderRecords() {
     }
 
     recordsContainer.innerHTML = filtered.map(record => `
-        <div class="record-card status-${record.status}">
+        <div class="record-card status-${record.status}" role="listitem">
             <div class="record-header">
                 <h3>🌳 ต้นไม้: <strong>${escapeHtml(record.treeId)}</strong>
-                    <span class="status-badge ${getStatusBadgeClass(record.status)}">
+                    <span class="status-badge ${getStatusBadgeClass(record.status)}" aria-label="สถานะ: ${db.getStatusText(record.status)}">
                         ${db.getStatusText(record.status)}
                     </span>
                 </h3>
                 <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                     <span class="timestamp">${formatDate(record.timestamp)}</span>
                     <button class="btn-delete" onclick="deleteRecord('${record.id}')" 
-                            title="ลบบันทึกนี้">✕</button>
+                            title="ลบบันทึกนี้" aria-label="ลบบันทึกของ ${escapeHtml(record.treeId)}">✕</button>
                 </div>
             </div>
             <div class="record-body">
@@ -210,12 +211,12 @@ function renderRecords() {
                     <span class="detail-value">${db.getActionText(record.action)}</span>
                 </div>
                 ${record.notes ? `
-                <div class="notes-full">
+                <div class="notes-full" aria-label="บันทึก">
                     📝 ${escapeHtml(record.notes)}
                 </div>` : ''}
                 ${record.photoUrl ? `
                 <div class="photo-link">
-                    <a href="${record.photoUrl}" target="_blank" rel="noopener">
+                    <a href="${record.photoUrl}" target="_blank" rel="noopener" aria-label="ดูรูปภาพของ ${escapeHtml(record.treeId)}">
                         📷 ดูรูปภาพ
                     </a>
                 </div>` : ''}

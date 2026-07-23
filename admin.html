@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Smart Tree Tracker - Admin Dashboard</title>
     <meta name="description" content="แดชบอร์ดจัดการข้อมูลต้นไม้">
     <meta name="theme-color" content="#2D8A4E">
@@ -18,8 +18,12 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Skip to content link for keyboard users -->
+    <a href="#main-content" class="skip-link">ข้ามไปยังเนื้อหาหลัก</a>
+
     <div class="container">
-        <div class="glass-card">
+        <main id="main-content">
+        <div class="glass-card" role="region" aria-label="แดชบอร์ดจัดการข้อมูลต้นไม้">
             <header>
                 <h1><span class="icon">📊</span> Admin Dashboard</h1>
                 <p>ข้อมูลการดูแลต้นไม้ทั้งหมด</p>
@@ -74,8 +78,9 @@
                     <option value="pest">🐛 มีศัตรูพืช</option>
                     <option value="wilted">🥀 เหี่ยวเฉา</option>
                 </select>
-                <input type="text" id="search-input" class="search-input" 
+                <input type="search" id="search-input" class="search-input" 
                        placeholder="🔎 ค้นหาตามรหัสต้นไม้, ชื่อผู้ดูแล, หรือบันทึก..."
+                       aria-label="ค้นหาบันทึก"
                        autocomplete="off">
             </div>
 
@@ -85,14 +90,14 @@
             </div>
 
             <!-- Records Container -->
-            <div id="records-container" class="record-list">
+            <div id="records-container" class="record-list" aria-live="polite" aria-atomic="false" aria-relevant="additions removals">
                 <!-- Records rendered by JS -->
             </div>
         </div>
+        </main>
     </div>
 
-    <!-- Toast container -->
-    <div id="toast-container" class="toast-container"></div>
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <script src="db.js"></script>
     <script src="firebase-config.js"></script>
