@@ -1,0 +1,27 @@
+[Unit]
+Description=Smart Tree Tracker - MariaDB Backend API
+After=network.target mariadb.service
+Wants=mariadb.service
+
+[Service]
+Type=simple
+User=ofcat
+WorkingDirectory=/home/ofcat/Documents/tree/server
+ExecStart=/usr/bin/node /home/ofcat/Documents/tree/server/index.js
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=DB_HOST=localhost
+Environment=DB_PORT=3306
+Environment=DB_USER=tracker
+Environment=DB_PASSWORD=tracker_pass
+Environment=DB_NAME=tree_tracker
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=full
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
