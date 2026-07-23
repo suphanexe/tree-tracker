@@ -50,6 +50,14 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Create .nojekyll (prevent Jekyll processing)
+        run: touch .nojekyll
+
+      - name: Clean up before upload
+        run: |
+          rm -rf node_modules .git .github/deploy_key .github/deploy_key.pub
+          rm -f package.json package-lock.json
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
