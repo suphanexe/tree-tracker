@@ -45,15 +45,18 @@ router.get('/stats', async (req, res) => {
       )
     ]);
 
-    const normalCount = statusCounts.find(s => s.status === 'normal')?.count || 0;
-    const total = totalTrees[0].count;
+    // Convert BigInt values to Number for JSON serialization
+    const normalCount = Number(statusCounts.find(s => s.status === 'normal')?.count || 0);
+    const total = Number(totalTrees[0].count);
+    const totalRec = Number(totalRecords[0].count);
+    const caretakerTotal = Number(caretakerCount[0].count);
 
     res.json({
       totalTrees: total,
-      totalRecords: totalRecords[0].count,
+      totalRecords: totalRec,
       normalCount,
       issueCount: total - normalCount,
-      caretakerCount: caretakerCount[0].count
+      caretakerCount: caretakerTotal
     });
   } catch (err) {
     console.error('[GET /api/records/stats]', err);
