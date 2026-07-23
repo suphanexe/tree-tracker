@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "sharp": "^0.35.3"
+  },
+  "devDependencies": {
+    "lighthouse": "^13.4.1"
+  }
+}

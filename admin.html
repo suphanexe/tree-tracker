@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart Tree Tracker - Admin Dashboard</title>
+    <meta name="description" content="แดชบอร์ดจัดการข้อมูลต้นไม้">
+    <meta name="theme-color" content="#2D8A4E">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Tree Tracker">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Smart Tree Tracker">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="glass-card">
+            <header>
+                <h1><span class="icon">📊</span> Admin Dashboard</h1>
+                <p>ข้อมูลการดูแลต้นไม้ทั้งหมด</p>
+                <div class="nav-links">
+                    <a href="index.html" class="btn btn-outline btn-sm">← กลับหน้าสแกน</a>
+                </div>
+            </header>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid" id="stats-container">
+                <div class="stat-card green">
+                    <div class="stat-icon">🌳</div>
+                    <h3>ต้นไม้ทั้งหมด</h3>
+                    <div class="stat-value" id="total-trees">0</div>
+                    <div class="stat-sub">ต้น</div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="stat-icon">✅</div>
+                    <h3>ปกติ</h3>
+                    <div class="stat-value" id="normal-count">0</div>
+                    <div class="stat-sub">ต้น</div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-icon">⚠️</div>
+                    <h3>ต้องการดูแล</h3>
+                    <div class="stat-value" id="issue-count">0</div>
+                    <div class="stat-sub">ต้น</div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-icon">👨‍🌾</div>
+                    <h3>ผู้ดูแล</h3>
+                    <div class="stat-value" id="caretaker-count">0</div>
+                    <div class="stat-sub">คน</div>
+                </div>
+            </div>
+
+            <!-- Data Actions -->
+            <div class="data-actions">
+                <button id="export-btn" class="btn btn-outline btn-sm">📥 ส่งออก CSV</button>
+                <button id="clear-btn" class="btn btn-danger btn-sm">🗑️ ลบข้อมูลทั้งหมด</button>
+                <button id="install-btn" class="btn btn-primary btn-sm" style="display:none;">📲 ติดตั้งแอป</button>
+            </div>
+
+            <!-- Filter & Search -->
+            <div class="filter-bar">
+                <label for="filter-status">🔍 กรอง:</label>
+                <select id="filter-status">
+                    <option value="all">ทั้งหมด</option>
+                    <option value="normal">✅ ปกติ</option>
+                    <option value="needs-water">💧 ต้องการน้ำ</option>
+                    <option value="disease">🦠 เป็นโรค</option>
+                    <option value="pest">🐛 มีศัตรูพืช</option>
+                    <option value="wilted">🥀 เหี่ยวเฉา</option>
+                </select>
+                <input type="text" id="search-input" class="search-input" 
+                       placeholder="🔎 ค้นหาตามรหัสต้นไม้, ชื่อผู้ดูแล, หรือบันทึก..."
+                       autocomplete="off">
+            </div>
+
+            <!-- Loading -->
+            <div id="loading" class="loading-text">
+                <span class="pulse">⏳ กำลังโหลดข้อมูล...</span>
+            </div>
+
+            <!-- Records Container -->
+            <div id="records-container" class="record-list">
+                <!-- Records rendered by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="db.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="admin.js"></script>
+
+    <!-- PWA: Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('[PWA] SW registered:', reg.scope))
+                .catch(err => console.warn('[PWA] SW registration failed:', err));
+        }
+
+        let deferredPrompt = null;
+        const installBtn = document.getElementById('install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'inline-flex';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const result = await deferredPrompt.userChoice;
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+        });
+
+        window.addEventListener('appinstalled', () => {
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

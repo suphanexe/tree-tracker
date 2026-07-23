@@ -1,0 +1,60 @@
+# Smart Tree Tracker - GitHub Pages Deployment
+# 
+# This workflow:
+# 1. Checks out the code
+# 2. Generates PWA icons from SVG (if Node.js deps available)
+# 3. Uploads the static files as a Pages artifact
+# 4. Deploys to GitHub Pages
+#
+# Setup:
+# 1. Go to your repo Settings → Pages → Source: "GitHub Actions"
+# 2. Add the deploy key to your repo Settings → Deploy keys
+# 3. Done! Every push to main deploys automatically.
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Generate PWA icons (optional)
+        run: |
+          if [ -f "scripts/generate-icons.js" ]; then
+            npm install sharp --no-save 2>/dev/null
+            node scripts/generate-icons.js
+          fi
+        continue-on-error: true
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

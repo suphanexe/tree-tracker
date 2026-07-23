@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart Tree Tracker - สแกน QR Code</title>
+    <meta name="description" content="ระบบติดตามดูแลต้นไม้อัจฉริยะ - สแกน QR Code เพื่อรายงานสถานะ">
+    <meta name="theme-color" content="#2D8A4E">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Tree Tracker">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Smart Tree Tracker">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="glass-card">
+            <header>
+                <h1><span class="icon">🌳</span> Smart Tree Tracker</h1>
+                <p>สแกน QR Code เพื่อรายงานสถานะต้นไม้</p>
+            </header>
+
+            <!-- Scanner Section -->
+            <div id="scanner-section">
+                <div id="reader" style="display:none;"></div>
+                <div class="scanner-actions">
+                    <button id="start-scan" class="btn btn-primary">📷 เริ่มสแกน QR Code</button>
+                    <button id="stop-scan" class="btn btn-danger" style="display:none;">⏹ หยุดสแกน</button>
+                </div>
+                <p class="mt-4" style="color: var(--text-muted); font-size: 0.85em;">
+                    💡 อนุญาตให้เข้าถึงกล้องเมื่อระบบขอ
+                </p>
+            </div>
+
+            <!-- Form Section -->
+            <div id="form-section" style="display:none;">
+                <h2>📝 รายงานสถานะต้นไม้</h2>
+                
+                <div class="tree-info">
+                    <div class="tree-icon">🌳</div>
+                    <div class="tree-detail">
+                        <div class="tree-label">รหัสต้นไม้</div>
+                        <div class="tree-value" id="tree-id">-</div>
+                    </div>
+                </div>
+
+                <form id="tree-form" novalidate>
+                    <div class="form-group">
+                        <label for="caretaker">
+                            <span class="label-icon">👨‍🌾</span> ชื่อผู้ดูแล
+                        </label>
+                        <input type="text" id="caretaker" required 
+                               placeholder="กรอกชื่อของคุณ"
+                               autocomplete="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">
+                            <span class="label-icon">🏥</span> สถานะต้นไม้
+                        </label>
+                        <select id="status" required>
+                            <option value="">-- เลือกสถานะ --</option>
+                            <option value="normal">✅ ปกติ</option>
+                            <option value="needs-water">💧 ต้องการน้ำ</option>
+                            <option value="disease">🦠 เป็นโรค</option>
+                            <option value="pest">🐛 มีศัตรูพืช</option>
+                            <option value="wilted">🥀 เหี่ยวเฉา</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="action">
+                            <span class="label-icon">🔧</span> การกระทำ
+                        </label>
+                        <select id="action" required>
+                            <option value="">-- เลือกการกระทำ --</option>
+                            <option value="watered">💧 รดน้ำ</option>
+                            <option value="fertilized">🌱 ใส่ปุ๋ย</option>
+                            <option value="pruned">✂️ ตัดแต่ง</option>
+                            <option value="sprayed">🧪 ฉีดยา</option>
+                            <option value="inspected">🔍 ตรวจสอบ</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">
+                            <span class="label-icon">📝</span> บันทึกเพิ่มเติม
+                        </label>
+                        <textarea id="notes" rows="3" 
+                                  placeholder="รายละเอียดอาการโรค หรือข้อสังเกต (ถ้ามี)"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="photo">
+                            <span class="label-icon">📷</span> อัปโหลดรูปภาพ
+                        </label>
+                        <input type="file" id="photo" accept="image/*" capture="environment">
+                        <small>💡 ถ่ายรูปร่องรอยโรคหรือสภาพต้นไม้ (ไม่บังคับ)</small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="submit-btn" class="btn btn-success">
+                            💾 บันทึกข้อมูล
+                        </button>
+                        <button type="button" id="cancel-btn" class="btn btn-secondary">
+                            ❌ ยกเลิก
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Success Message -->
+            <div id="success-message" style="display:none;">
+                <div class="success-box">
+                    <div class="success-icon">✅</div>
+                    <h2>บันทึกสำเร็จ!</h2>
+                    <p>ข้อมูลถูกบันทึกลงในระบบเรียบร้อยแล้ว</p>
+                    <button id="scan-again" class="btn btn-primary">📷 สแกนต้นต่อไป</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Actions -->
+        <div class="text-center mt-4" style="display:flex; flex-direction:column; gap:8px; align-items:center;">
+            <a href="admin.html" class="btn btn-outline btn-sm">📊 ไปหน้า Admin Dashboard</a>
+            <button id="install-btn" class="btn btn-primary btn-sm" style="display:none;">📲 ติดตั้งแอป</button>
+        </div>
+    </div>
+
+    <!-- Toast container -->    <div id="toast-container" class="toast-container"></div>
+
+    <script src="db.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="app.js"></script>
+
+    <!-- PWA: Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('[PWA] SW registered:', reg.scope))
+                .catch(err => console.warn('[PWA] SW registration failed:', err));
+        }
+
+        // PWA Install button
+        let deferredPrompt = null;
+        const installBtn = document.getElementById('install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'inline-flex';
+            console.log('[PWA] Ready to install - showing install button');
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const result = await deferredPrompt.userChoice;
+            if (result.outcome === 'accepted') {
+                console.log('[PWA] User accepted install');
+            } else {
+                console.log('[PWA] User dismissed install');
+            }
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+        });
+
+        window.addEventListener('appinstalled', () => {
+            console.log('[PWA] App installed successfully');
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
